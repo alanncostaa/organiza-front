@@ -6,7 +6,6 @@ interface IUserFormModalProps {
   formTitle: string;
   closeModal: () => void;
   saveUserData: (data: IUser) => void;
-  userData: IUser;
 }
 
 type IUserFormData = {
@@ -15,46 +14,31 @@ type IUserFormData = {
   telefone: string;
   receita: number;
   meta: number;
+  senha: string;
   dt_nas: string;
 };
 
-const formatDate = (date: string | Date) => {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
-export function UserFormModal({
+export function UserCreateFormModal({
   formTitle,
   closeModal,
   saveUserData,
-  userData
 }: IUserFormModalProps) {
   const { register, handleSubmit } = useForm<IUserFormData>({
-    defaultValues: {
-      name: userData?.nome || "",
-      email: userData?.email || "",
-      telefone: userData?.telefone || "",
-      receita: userData?.receita || 0,
-      meta: userData?.meta || 0,
-      dt_nas: formatDate(userData?.d_nas || new Date())
-    }
+    
   });
 
   const onSubmit = (data: IUserFormData) => {
-    const updatedUser: IUser = {
-      id: userData.id,
+    const createUser: IUser = {
       nome: data.name,
       email: data.email,
+      senha: data.senha,
       telefone: data.telefone,
       receita: Number(data.receita),
       meta: Number(data.meta),
       d_nas: new Date(data.dt_nas).toISOString()
     };
 
-    saveUserData(updatedUser);
+    saveUserData(createUser);
     closeModal();
   };
 
@@ -80,6 +64,7 @@ export function UserFormModal({
             <form className="flex flex-col gap-4 px-12 mt-4 mb-6" onSubmit={handleSubmit(onSubmit)}>
               <Input type="text" placeholder="Nome" {...register("name", { required: true })} />
               <Input type="text" placeholder="Email" {...register("email", { required: true })} />
+              <Input type="password" placeholder="Senha" {...register("senha", { required: true })} />
               <Input type="text" placeholder="Telefone" {...register("telefone")} />
               <Input type="number" placeholder="Receita" {...register("receita", { valueAsNumber: true })} />
               <Input type="number" placeholder="Meta" {...register("meta", { valueAsNumber: true })} />

@@ -18,7 +18,6 @@ export async function updateUserData(userData: IUser) {
 
   const response = await api.put(`/user/${userData.id}`, userData);
 
-  // Verificação segura
   if (!response || !response.data) {
     throw new Error("Resposta da API inválida.");
   }

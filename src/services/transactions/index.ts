@@ -10,6 +10,15 @@ export async function getTransactions() {
     }
 }
 
+export async function getTransactionsByUser(userId: string) {
+    try {
+      const response = await api.get(`/transaction/user/${userId}`) 
+      return response.data; 
+    } catch (error) {
+        throw new Error("Erro ao buscar transações por usuario: " + error);
+    }
+}
+
 export async function createTransaction(transaction: ITransaction) {
     try {
         const response = await api.post('/transaction', transaction);
@@ -18,4 +27,25 @@ export async function createTransaction(transaction: ITransaction) {
     } catch (error) {
         throw new Error("Erro ao criar transação: " + error);
     }
+}
+
+export async function updateTransaction(transaction: ITransaction) {
+  try {
+    
+    const response = await api.put(`/transaction/${transaction.id}`, transaction);
+    toast.success("Transação atualizada com sucesso!");
+    return response.data; 
+  } catch (error) {
+    throw new Error("Erro ao atualizar transação: " + error);
+  }
+}
+
+export async function deleteTransaction(transactionId: string) {
+  try {
+    const response = await api.delete(`/transaction/${transactionId}`);
+    toast.success("Transação excluída com sucesso!");
+    return response.data; 
+  } catch (error) {
+    throw new Error("Erro ao excluir transação: " + error);
+  }
 }

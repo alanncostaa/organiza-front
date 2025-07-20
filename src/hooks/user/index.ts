@@ -3,13 +3,10 @@ import { IUser } from "@/types/user";
 import { useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 
 
-// Defina a chave de consulta (QUERY_KEY) para o usuário
 const QUERY_KEY = "qkUser";
 
-// Tipagem para o retorno da consulta de dados do usuário
-type UserQueryResponse = IUser | null; // Aqui você define o tipo de retorno esperado para o usuário
+type UserQueryResponse = IUser | null; 
 
-// Função para criar um usuário
 const Create = () => {
   const queryClient = useQueryClient();
 
@@ -24,7 +21,6 @@ const Create = () => {
   });
 };
 
-// Função para listar (obter) os dados do usuário
 const List = () => {
   return useQuery<UserQueryResponse>({
     queryKey: [QUERY_KEY],
@@ -32,7 +28,6 @@ const List = () => {
   });
 };
 
-// Função para atualizar os dados do usuário
 const Update = () => {
   const queryClient = useQueryClient();
 
@@ -49,12 +44,12 @@ const Update = () => {
 
 const GetById = (userId: string) => {
   return useQuery<IUser, Error>({
-    queryKey: [QUERY_KEY, userId], // A chave agora inclui o userId para tornar a consulta única por usuário
-    queryFn: () => getUserDataById(userId), // Usando a função que faz a consulta com ID
+    queryKey: [QUERY_KEY, userId], 
+    queryFn: () => getUserDataById(userId), 
   });
 };
 
-// Expondo as funções de criação, listagem e atualização do usuário
+
 export const useUser = {
   Create,
   List,

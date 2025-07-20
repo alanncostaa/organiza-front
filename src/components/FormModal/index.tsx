@@ -4,12 +4,13 @@ import { TransactionSwitcher } from "../TransactionSwitcher";
 import { ITransaction } from "@/types/transaction";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-// Validação do formulário
+import { useEffect } from "react";
 
 export interface IFormModalProps {
     formTitle: string;
     closeModal: () => void;
-    addTransaction: (transaction: ITransaction) => void;
+    initialData?: ITransaction;
+    onSave: (transaction: ITransaction) => void;
 }
 
 const transactionSchema = object({
@@ -43,8 +44,7 @@ const transactionFormDefaultValues: ITransactionForm = {
 type TransactionType = 'INCOME' | 'OUTCOME';
 
 
-export function FormModal({formTitle, closeModal, addTransaction}: IFormModalProps){
-    // Função para lidar com o envio do formulário
+export function FormModal({formTitle, closeModal, initialData, onSave}: IFormModalProps){
     const {
       handleSubmit,
       setValue,
@@ -52,9 +52,20 @@ export function FormModal({formTitle, closeModal, addTransaction}: IFormModalPro
       register,
       formState: { errors }
     } = useForm<ITransactionForm>({
-      defaultValues: transactionFormDefaultValues,
+      defaultValues: initialData || transactionFormDefaultValues,
       resolver: yupResolver(transactionSchema)
     })
+
+    useEffect(() => {
+    if (initialData) {
+      setValue("title", initialData.title);
+      setValue("type", initialData.type);
+      setValue("category", initialData.category);
+      setValue("price", initialData.price);
+      setValue("data", new Date(initialData.data)); 
+    }
+  }, [initialData, setValue]);
+
 
     const handleSetType = (type: 'INCOME' | 'OUTCOME') => {
       setValue('type', type);
@@ -63,8 +74,7 @@ export function FormModal({formTitle, closeModal, addTransaction}: IFormModalPro
     const type = watch('type', 'INCOME');
 
     const onSubmit = (data: ITransactionForm) => {
-      const transactionWithUser = { ...data, iduser: "9ceceb76-b95a-41d8-a350-613245a1cdab"};
-      addTransaction(transactionWithUser as ITransaction);
+      onSave(data as ITransaction);
       console.log(data)
       closeModal();
     }
@@ -77,7 +87,6 @@ export function FormModal({formTitle, closeModal, addTransaction}: IFormModalPro
   <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
     <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">     
       <div className="relative transform overflow-hidden rounded-lg bg-modal text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-        {/* Botão de fechamento "X" */}
         <button 
           type="button" 
           className="absolute top-0 right-0 mt-4 mr-4 text-gray-400 hover:text-gray-600" 

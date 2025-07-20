@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { loginUser } from "@/services/auth";
+import { loginUser, resetPassword, sendRecoveryLink } from "@/services/auth";
 
 const QUERY_KEY = "qkAuth";
 
@@ -48,7 +48,33 @@ const SignOut = () => {
   });
 };
 
+const SendRecoveryLink = () => {
+  return useMutation({
+    mutationFn: sendRecoveryLink,
+    onSuccess: () => {
+      console.log("Link de recuperação enviado com sucesso!");
+    },
+    onError: (error: Error) => {
+      console.error("Erro ao enviar link de recuperação:", error);
+    },
+  });
+};
+
+const ResetPassword = () => {
+  return useMutation<void, Error, { token: string; newPassword: string }>({
+    mutationFn: ({ token, newPassword }) => resetPassword(token, newPassword),
+    onSuccess: () => {
+      console.log("Senha alterada com sucesso!");
+    },
+    onError: (error) => {
+      console.error("Erro ao redefinir a senha:", error);
+    },
+  });
+};
+
 export const useAuth = {
   SignIn,
   SignOut,
+  ResetPassword,
+  SendRecoveryLink
 };
