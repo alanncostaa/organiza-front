@@ -37,7 +37,7 @@ const transactionFormDefaultValues: ITransactionForm = {
   type: 'INCOME',
   category: '',
   price: 0,
-  data: new Date()
+  data: new Date(),
 }
 
 type TransactionType = 'INCOME' | 'OUTCOME';
@@ -45,7 +45,6 @@ type TransactionType = 'INCOME' | 'OUTCOME';
 
 export function FormModal({formTitle, closeModal, addTransaction}: IFormModalProps){
     // Função para lidar com o envio do formulário
-
     const {
       handleSubmit,
       setValue,
@@ -60,11 +59,13 @@ export function FormModal({formTitle, closeModal, addTransaction}: IFormModalPro
     const handleSetType = (type: 'INCOME' | 'OUTCOME') => {
       setValue('type', type);
     }
-
+    
     const type = watch('type', 'INCOME');
 
     const onSubmit = (data: ITransactionForm) => {
-      addTransaction(data as ITransaction);
+      const transactionWithUser = { ...data, iduser: "9ceceb76-b95a-41d8-a350-613245a1cdab"};
+      addTransaction(transactionWithUser as ITransaction);
+      console.log(data)
       closeModal();
     }
     

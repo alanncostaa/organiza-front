@@ -5,6 +5,7 @@ export interface ITransaction {
     category: string;
     data: Date;
     type: "INCOME" | "OUTCOME";
+    iduser: string;
 }
 
 export type ITotal = {

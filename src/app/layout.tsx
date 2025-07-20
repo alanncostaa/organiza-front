@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import { Providers } from "@/components/Providers";
-
+import { AuthProvider } from "@/context/AuthContext";
 
 
 const poppins = Poppins({
@@ -28,10 +28,11 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} antialiased`}
       >
+        <AuthProvider>
         <Providers>
           {children}
         </Providers>
-        
+        </AuthProvider>
       </body>
     </html>
   );
