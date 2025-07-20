@@ -11,6 +11,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
     "@tanstack/react-query": "^5.83.0",
+    "@vercel/edge-config": "^1.4.0",
     "axios": "^1.10.0",
     "jwt-decode": "^4.0.0",
     "next": "15.3.2",
