@@ -1,12 +1,34 @@
 import { useForm } from "react-hook-form";
 import { Input } from "../Form/Input";
 import { IUser } from "@/types/user";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface IUserFormModalProps {
   formTitle: string;
   closeModal: () => void;
   saveUserData: (data: IUser) => void;
 }
+
+const schema = yup.object().shape({
+  name: yup.string().required("Nome é obrigatório").min(3, "Mínimo 3 letras"),
+  email: yup.string().required("Email é obrigatório").email("Email inválido"),
+  senha: yup.string().required("Senha é obrigatória").min(6, "Mínimo 6 caracteres"),
+  telefone: yup.string().required("Telefone é obrigatório"),
+  receita: yup
+    .number()
+    .typeError("Receita deve ser um número")
+    .required("Receita é obrigatória")
+    .min(0, "Receita não pode ser negativa"),
+  meta: yup
+    .number()
+    .typeError("Meta deve ser um número")
+    .required("Meta é obrigatória")
+    .min(0, "Meta não pode ser negativa"),
+  dt_nas: yup
+    .string()
+    .required("Data de nascimento é obrigatória")
+});
 
 type IUserFormData = {
   name: string;
@@ -22,9 +44,10 @@ export function UserCreateFormModal({
   formTitle,
   closeModal,
   saveUserData,
+  
 }: IUserFormModalProps) {
-  const { register, handleSubmit } = useForm<IUserFormData>({
-    
+  const { register, handleSubmit,formState: { errors }} = useForm<IUserFormData>({
+    resolver: yupResolver(schema)
   });
 
   const onSubmit = (data: IUserFormData) => {
@@ -63,12 +86,19 @@ export function UserCreateFormModal({
             </div>
             <form className="flex flex-col gap-4 px-12 mt-4 mb-6" onSubmit={handleSubmit(onSubmit)}>
               <Input type="text" placeholder="Nome" {...register("name", { required: true })} />
+              {errors.name && <span className="text-red-500 text-sm">{errors.name.message}</span>}
               <Input type="text" placeholder="Email" {...register("email", { required: true })} />
+              {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
               <Input type="password" placeholder="Senha" {...register("senha", { required: true })} />
+              {errors.senha && <span className="text-red-500 text-sm">{errors.senha.message}</span>}
               <Input type="text" placeholder="Telefone" {...register("telefone")} />
+              {errors.telefone && <span className="text-red-500 text-sm">{errors.telefone.message}</span>}
               <Input type="number" placeholder="Receita" {...register("receita", { valueAsNumber: true })} />
+              {errors.receita && <span className="text-red-500 text-sm">{errors.receita.message}</span>}
               <Input type="number" placeholder="Meta" {...register("meta", { valueAsNumber: true })} />
+              {errors.meta && <span className="text-red-500 text-sm">{errors.meta.message}</span>}
               <Input type="date" placeholder="Data de Nascimento" {...register("dt_nas", { required: true })} />
+              {errors.dt_nas && <span className="text-red-500 text-sm">{errors.dt_nas.message}</span>}
               <div className="bg-modal px-12 py-3 flex sm:flex-row-reverse w-full mb-11">
                 <button
                   type="submit"
